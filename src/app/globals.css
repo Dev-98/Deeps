@@ -1,0 +1,455 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   HER BIRTHDAY — design tokens
+   Warm cream base, deep cocoa ink, caramel + mocha supports,
+   one restrained accent (rose) used sparingly for emotional beats.
+------------------------------------------------------------------- */
+@theme {
+  --color-cream: #f7efe3;
+  --color-cream-deep: #efe2cf;
+  --color-ivory: #fdf9f3;
+
+  --color-cocoa-50: #f0e5d8;
+  --color-cocoa-100: #dcc7ad;
+  --color-cocoa-200: #c2a37f;
+  --color-cocoa-300: #a67f57;
+  --color-cocoa-400: #8a5f3c;
+  --color-cocoa-500: #6d4526;
+  --color-cocoa-600: #533418;
+  --color-cocoa-700: #3d2511;
+  --color-cocoa-800: #2a190c;
+  --color-cocoa-900: #1a0f07;
+
+  --color-caramel: #c98a45;
+  --color-mocha: #7c6152;
+  --color-rose: #c9556b;
+
+  /* ----------------------------------------------------------------
+     The escalation.
+
+     The first six chapters are deliberately restrained — cream, cocoa,
+     one warm accent. They are the run-up. These are the colours the
+     story is allowed to spend once it gets to the actual birthday, and
+     they exist ONLY from The Wish onward. Using them earlier spends the
+     surprise before it arrives.
+  ---------------------------------------------------------------- */
+  /* Chapter 01's bloom: a pink sky over a blue world. */
+  --color-blush: #ffd9e8;
+  --color-petal: #ffb3ce;
+  --color-heart: #ff6f9c;
+  --color-deep-heart: #e0457b;
+  --color-periwinkle: #9fb0d9;
+  --color-dusk-blue: #6d81ab;
+  --color-deep-blue: #43527d;
+
+  --color-night: #0a0510;
+  --color-midnight: #150a20;
+  --color-violet: #3d1650;
+  --color-plum: #5c1f5e;
+  --color-magenta: #e0457b;
+  --color-flame: #ff9d3c;
+  --color-gold: #f2c14e;
+  --color-champagne: #ffe9b0;
+  --color-glow: #fff6e2;
+
+  --font-display: var(--font-display), Georgia, "Times New Roman", serif;
+  --font-body: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-hand: var(--font-hand), "Segoe Script", cursive;
+
+  --ease-door: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root {
+  color-scheme: light;
+  --page-bg: var(--color-cream);
+  --page-ink: var(--color-cocoa-800);
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--page-bg);
+  color: var(--page-ink);
+  font-family: var(--font-body);
+  overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* A soft paper grain that sits under every scene. */
+.paper-grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.35;
+  mix-blend-mode: multiply;
+  background-image: radial-gradient(
+      circle at 1px 1px,
+      rgba(61, 37, 17, 0.09) 1px,
+      transparent 0
+    );
+  background-size: 4px 4px;
+}
+
+.vignette::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 45%,
+    rgba(42, 25, 12, 0.28) 100%
+  );
+}
+
+/* Focus that fits the world instead of the browser default. */
+:focus-visible {
+  outline: 2px solid var(--color-caramel);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+
+/* ------------------------------------------------------------------
+   Entrance animations live in CSS, not JS.
+   The server-rendered HTML must never be permanently invisible: if
+   scripts are slow, blocked, or the tab is loaded in the background,
+   `animation-fill-mode: both` still leaves every element at its final,
+   visible state. JavaScript is for interaction, not for existing.
+------------------------------------------------------------------- */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.45; }
+  50% { transform: scale(1.35); opacity: 0; }
+}
+
+.anim-fade {
+  animation: fade-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.anim-rise {
+  animation: rise-in 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.anim-breathe {
+  animation: breathe 2.6s ease-in-out infinite;
+}
+
+
+/* ------------------------------------------------------------------
+   Materials.
+   Chapters should feel like surfaces with light falling on them, not
+   flat panels. These are the shared physical ingredients.
+------------------------------------------------------------------- */
+
+/* Warm paper: a card you could pick up. */
+.mat-paper {
+  background:
+    linear-gradient(148deg, #fffdf9 0%, #fdf6ea 46%, #f6e9d6 100%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.9) inset,
+    0 -1px 0 rgba(109, 69, 38, 0.08) inset,
+    0 2px 4px -2px rgba(42, 25, 12, 0.25),
+    0 18px 34px -18px rgba(42, 25, 12, 0.55),
+    0 42px 70px -40px rgba(42, 25, 12, 0.5);
+}
+
+/* The same paper, turned away from the light — for stacked cards behind. */
+.mat-paper-dim {
+  background: linear-gradient(148deg, #f7eddd 0%, #eee0cb 100%);
+  box-shadow: 0 14px 28px -18px rgba(42, 25, 12, 0.5);
+}
+
+/* A dark desk: leather-ish, lit from above. */
+.mat-desk {
+  background:
+    radial-gradient(
+      120% 80% at 50% -10%,
+      rgba(255, 220, 170, 0.22) 0%,
+      rgba(255, 220, 170, 0) 55%
+    ),
+    linear-gradient(178deg, #3a2515 0%, #2a190c 55%, #1d1108 100%);
+}
+
+/* Moulded plastic, for the cassette deck. */
+.mat-shell {
+  background: linear-gradient(168deg, #6d4526 0%, #533418 52%, #35200e 100%);
+  box-shadow:
+    0 1px 0 rgba(255, 226, 187, 0.22) inset,
+    0 -2px 6px rgba(0, 0, 0, 0.45) inset,
+    0 26px 50px -26px rgba(0, 0, 0, 0.85);
+}
+
+/* A recess cut into that shell. */
+.mat-recess {
+  background: linear-gradient(180deg, #1d1108 0%, #2c1a0d 100%);
+  box-shadow:
+    0 3px 8px rgba(0, 0, 0, 0.6) inset,
+    0 -1px 0 rgba(255, 226, 187, 0.14) inset;
+}
+
+/* A single warm light hanging over the scene. */
+.mat-spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    75% 55% at 50% 12%,
+    rgba(255, 214, 148, 0.3) 0%,
+    rgba(255, 214, 148, 0.08) 38%,
+    transparent 72%
+  );
+}
+
+/* Torn/deckled edge for letter paper. */
+.mat-deckle {
+  -webkit-mask-image: linear-gradient(#000 0 0);
+  mask-image: linear-gradient(#000 0 0);
+}
+
+@keyframes reel-spin {
+  to { transform: rotate(360deg); }
+}
+
+.anim-reel {
+  animation: reel-spin 2.6s linear infinite;
+}
+
+@keyframes seal-press {
+  0% { transform: scale(0.7) rotate(-14deg); opacity: 0; }
+  60% { transform: scale(1.08) rotate(3deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+.anim-seal {
+  animation: seal-press 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+
+/* ==================================================================
+   FINALE MATERIALS
+   Only for chapters 08 onward. Everything here is louder than the
+   rest of the site on purpose.
+================================================================== */
+
+/* A room with the lights off and one flame in it. */
+.mat-dark-room {
+  background:
+    radial-gradient(
+      90% 60% at 50% 62%,
+      rgba(255, 157, 60, 0.16) 0%,
+      rgba(255, 157, 60, 0.04) 40%,
+      transparent 70%
+    ),
+    linear-gradient(180deg, #0a0510 0%, #140a16 60%, #1c0f12 100%);
+}
+
+/* The celebration ground: a slow-shifting jewel gradient. */
+.mat-festival {
+  background: linear-gradient(
+    135deg,
+    #3d1650 0%,
+    #5c1f5e 22%,
+    #a12a63 45%,
+    #e0457b 62%,
+    #f2803c 80%,
+    #f2c14e 100%
+  );
+  background-size: 300% 300%;
+  animation: festival-drift 18s ease-in-out infinite;
+}
+
+@keyframes festival-drift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Gold leaf, for the one word that deserves it. */
+.text-goldleaf {
+  background: linear-gradient(
+    100deg,
+    #b8862b 0%,
+    #f2c14e 22%,
+    #fff6e2 38%,
+    #f2c14e 54%,
+    #b8862b 74%,
+    #f2c14e 100%
+  );
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: goldleaf-sweep 5.5s ease-in-out infinite;
+}
+
+@keyframes goldleaf-sweep {
+  0%, 100% { background-position: 0% 0; }
+  50% { background-position: 100% 0; }
+}
+
+/* Candle flame. */
+@keyframes flame-flicker {
+  0%, 100% { transform: scale(1) translateY(0) skewX(0deg); opacity: 1; }
+  25% { transform: scale(1.06, 0.96) translateY(-1px) skewX(1.5deg); opacity: 0.94; }
+  50% { transform: scale(0.95, 1.07) translateY(1px) skewX(-1.5deg); opacity: 1; }
+  75% { transform: scale(1.04, 0.98) translateY(-1px) skewX(1deg); opacity: 0.9; }
+}
+
+.anim-flame { animation: flame-flicker 0.42s ease-in-out infinite; }
+
+@keyframes candle-glow {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.07); }
+}
+
+.anim-candle-glow { animation: candle-glow 2.2s ease-in-out infinite; }
+
+/* Confetti. */
+@keyframes confetti-fall {
+  0% { transform: translate3d(0, -12vh, 0) rotate(0deg); opacity: 0; }
+  8% { opacity: 1; }
+  100% { transform: translate3d(var(--drift, 0px), 112vh, 0) rotate(var(--spin, 720deg)); opacity: 1; }
+}
+
+.anim-confetti {
+  animation: confetti-fall var(--dur, 5s) linear var(--delay, 0s) infinite;
+}
+
+/* Fireworks. */
+@keyframes burst-ring {
+  0% { transform: scale(0.1); opacity: 0; }
+  12% { opacity: 1; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+
+.anim-burst { animation: burst-ring var(--dur, 2.4s) ease-out var(--delay, 0s) infinite; }
+
+/* A flame flaring up and dying back where it stands. */
+@keyframes flame-flare {
+  0%, 100% { transform: translateY(6px) scale(0.72) skewX(0deg); opacity: 0; }
+  18% { opacity: 0.95; }
+  38% { transform: translateY(-4px) scale(1.06) skewX(-3deg); opacity: 1; }
+  58% { transform: translateY(-8px) scale(0.94) skewX(3deg); opacity: 0.85; }
+  80% { transform: translateY(-16px) scale(0.8) skewX(-2deg); opacity: 0.25; }
+}
+
+.anim-flame-flare {
+  animation: flame-flare var(--dur, 3.4s) ease-in-out var(--delay, 0s) infinite;
+  transform-origin: 50% 100%;
+}
+
+/* Slow bokeh drifting behind everything. */
+@keyframes bokeh-drift {
+  0%, 100% { transform: translate3d(0, 0, 0); opacity: 0.35; }
+  50% { transform: translate3d(var(--bx, 18px), var(--by, -26px), 0); opacity: 0.7; }
+}
+
+.anim-bokeh { animation: bokeh-drift var(--dur, 11s) ease-in-out var(--delay, 0s) infinite; }
+
+/* A polaroid developing from nothing. */
+@keyframes develop {
+  from { filter: blur(14px) saturate(0.2) brightness(1.35); opacity: 0.4; }
+  to { filter: blur(0) saturate(1) brightness(1); opacity: 1; }
+}
+
+.anim-develop { animation: develop 2.4s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* The glint on a hidden thing.
+   Rests at a level you can actually see, then flares. Hidden should mean
+   "you have to look", never "it is not rendered". */
+@keyframes glint {
+  0%, 84%, 100% { opacity: 0.6; transform: scale(1); }
+  90% { opacity: 1; transform: scale(1.5); }
+  95% { opacity: 0.85; transform: scale(1.12); }
+}
+
+.anim-glint { animation: glint 3s ease-in-out infinite; }
+
+@keyframes glint-halo {
+  0%, 84%, 100% { opacity: 0.12; transform: scale(1); }
+  90% { opacity: 0.4; transform: scale(1.7); }
+}
+
+.anim-glint-halo { animation: glint-halo 3s ease-in-out infinite; }
+
+
+/* A heart let go of. */
+@keyframes heart-rise {
+  0% { transform: translate3d(0, 0, 0) scale(0.45) rotate(0deg); opacity: 0; }
+  12% { opacity: var(--peak, 0.9); }
+  85% { opacity: var(--peak, 0.9); }
+  100% {
+    transform: translate3d(var(--hx, 20px), -92vh, 0) scale(1) rotate(var(--hr, 16deg));
+    opacity: 0;
+  }
+}
+
+.anim-heart-rise {
+  animation: heart-rise var(--dur, 9s) linear var(--delay, 0s) infinite;
+}
+
+/* A heart sitting on a stem, breathing. */
+@keyframes heart-beat {
+  0%, 100% { transform: scale(1); }
+  14% { transform: scale(1.13); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.07); }
+}
+
+.anim-heart-beat { animation: heart-beat var(--dur, 2.4s) ease-in-out var(--delay, 0s) infinite; }
+
+/* Step-to-step mood changes ease in CSS; during the bloom GSAP owns them. */
+.layer-drain,
+.layer-night,
+.sky-sun,
+.sky-moon,
+.sky-stars,
+.figure-her,
+.figure-me,
+.bloom-prop {
+  transition:
+    opacity 1.4s ease-out,
+    transform 1.4s ease-out;
+}
+
+.bloom-running .layer-drain,
+.bloom-running .layer-night,
+.bloom-running .sky-sun,
+.bloom-running .sky-moon,
+.bloom-running .sky-stars,
+.bloom-running .figure-her,
+.bloom-running .figure-me,
+.bloom-running .bloom-prop {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
